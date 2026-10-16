@@ -1,0 +1,121 @@
+```html
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overwhelmed Canvas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4 relative">
+
+    <canvas id="bgCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-40"></canvas>
+
+    <div class="relative z-10 max-w-xl w-full bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-10 space-y-6 transition-all duration-300 hover:border-sky-500/50">
+        
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <h1 class="text-2xl sm:text-3xl font-bold text-sky-400">
+                Overwhelmed 
+            </h1>
+            <span class="bg-sky-500/10 text-sky-400 text-xs sm:text-sm px-3 py-1 rounded-full border border-sky-500/20">
+                (Bohat Bojh Mehsoos Hona)
+            </span>
+        </div>
+        
+        <div class="space-y-5 text-slate-300 leading-loose text-base sm:text-lg">
+            <div class="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                <strong class="text-sky-300 block mb-1">Yeh kya hai:</strong> 
+                Jab ek sath bohat saare kaam, decisions, ya pressures aa jayen aur dimagh ko lage ke "Main yeh sab handle nahi kar sakta/sakti."
+            </div>
+            
+            <div class="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                <strong class="text-sky-300 block mb-1">Waja:</strong> 
+                Yeh aam tor par kisi specific situation ya bohat saari cheezon ke ek sath hone ki waja se hota hai. Jab situation khatam ho ya thora break mil jaye, toh yeh kam ho jata hai.
+            </div>
+        </div>
+
+        <div class="pt-2 text-center">
+            <button onclick="triggerPulse()" class="bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-sky-500/20 hover:shadow-sky-500/40 transform hover:-translate-y-0.5 transition-all active:translate-y-0">
+                Dimagh ko Pur-Sukoon Karein (Break)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let particles = [];
+        let numParticles = 40;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.color = Math.random() > 0.5 ? '#38bdf8' : '#6366f1';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        function triggerPulse() {
+            particles.forEach(p => {
+                p.speedX *= 2.5;
+                p.speedY *= 2.5;
+                setTimeout(() => {
+                    p.speedX /= 2.5;
+                    p.speedY /= 2.5;
+                }, 1000);
+            });
+        }
+    </script>
+</body>
+</html>
+
+```
